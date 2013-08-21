@@ -34,6 +34,7 @@ sed -i "s/@day/`date +%-e`/g" $filename
 
 echo "Finished adding $filename to $year."
 
+# You may want to comment out the next two lines which immediately launch the IPython notebook
 echo "Launching IPython Notebook."
 ipython notebook --pylab inline  &> /dev/null &
 
