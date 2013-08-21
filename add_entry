@@ -6,6 +6,7 @@ day=`date +%d`
 
 echo "Today is $year / $month / $day"
 
+# Create YEAR directory if it does not already exist
 if [ ! -d "$year" ]; then
     mkdir $year
 fi
@@ -22,8 +23,10 @@ if [ -f "$filename" ]; then
     exit
 fi
 
+# Copy the template entry into the YEAR directory
 cp ../.template/entry.ipynb $filename
 
+# Make a few substitutions, setting the current date inside the copied template entry
 sed -i "s/@year/$year/g" $filename
 sed -i "s/@MONTH/`date +%B`/g" $filename
 sed -i "s/@dday/$day/g" $filename
