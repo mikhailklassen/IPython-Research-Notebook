@@ -1,0 +1,37 @@
+#!/bin/bash
+
+year=`date +%G`
+month=`date +%m`
+day=`date +%d`
+
+echo "Today is $year / $month / $day"
+
+if [ ! -d "$year" ]; then
+    mkdir $year
+fi
+
+if [ -d "$year" ]; then
+    echo "Adding new entry to directory $year."
+fi
+
+cd $year
+filename=$year-$month-$day.ipynb
+
+if [ -f "$filename" ]; then
+    echo "A file called '$filename' already exists in diretory $year. Aborting addition of new entry."
+    exit
+fi
+
+cp ../.template/entry.ipynb $filename
+
+sed -i "s/@year/$year/g" $filename
+sed -i "s/@MONTH/`date +%B`/g" $filename
+sed -i "s/@dday/$day/g" $filename
+sed -i "s/@day/`date +%-e`/g" $filename
+
+echo "Finished adding $filename to $year."
+
+echo "Launching IPython Notebook."
+ipython notebook --pylab inline  &> /dev/null &
+
+exit
