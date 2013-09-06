@@ -1,4 +1,5 @@
-#IPython Research Notebook by Mikhail Klassen
+#IPython Research Notebook 
+by Mikhail Klassen
 
 ##Description 
 The IPython notebook is an ideal tool for keeping track of your research because
