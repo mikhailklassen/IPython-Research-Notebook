@@ -1,0 +1,50 @@
+#!/bin/bash
+IFS=$'\n'
+mkdir tmp
+if [ -z $1 ]
+then
+    dir=`date +%G`
+else
+    dir=$1
+fi
+notebooks=`ls -lt --time-style=long-iso $dir | grep ipynb | sed -n 's/ \+/ /gp' | cut -d' ' -f 6,8-`
+echo '<!DOCTYPE html><html lang="en">' >> tmp/index.html
+echo '<head>' >> tmp/index.html
+echo '<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Josefin+Sans:400,600">' >> tmp/index.html
+echo '<style>' >> tmp/index.html
+echo 'html, body {' >> tmp/index.html
+echo "background-color: #F8F8FF;" >> tmp/index.html
+echo "height: 100%;" >> tmp/index.html
+echo "font-family: 'Josefin Sans', sans-serif;" >> tmp/index.html
+echo "font-size: 20px}" >> tmp/index.html
+echo "h1 {" >> tmp/index.html
+echo "border-bottom: thin dotted }" >> tmp/index.html
+echo '.wrapper {' >> tmp/index.html
+echo 'min-height: 100%;' >> tmp/index.html
+echo 'margin: 0 auto -4em;' >> tmp/index.html
+echo '}' >> tmp/index.html
+echo '.footer, .push {' >> tmp/index.html
+echo 'height: 4em;' >> tmp/index.html
+echo '}' >> tmp/index.html
+echo "</style>" >> tmp/index.html
+echo '</head>' >> tmp/index.html
+echo '<body>' >> tmp/index.html
+echo "<h1>My IPython Notebooks</h1>" >> tmp/index.html
+echo '<div class="wrapper">' >> tmp/index.html
+for nb in $notebooks
+do
+	echo "<a href=`echo $nb | cut -f 2- -d' '`>" >> tmp/index.html
+	echo '<h2>'`echo $nb | cut -f 2- -d' ' | sed -e 's/notebooks\///' | sed -e 's/\.ipynb//'`' (Last Modified: '`echo $nb | cut -f 1 -d' '`')</h2>' >> tmp/index.html
+	echo '</a>' >> tmp/index.html
+done
+echo '<div class="push"></div>' >> tmp/index.html
+echo "</div>" >> tmp/index.html
+echo '<div class="footer">' >> tmp/index.html
+echo '<p>Last Updated '`date`'</p' >> tmp/index.html
+echo "</div>" >> tmp/index.html
+echo '</body>' >> tmp/index.html
+cd tmp
+cp ../$dir/*.ipynb .
+tar -cvzf ../html.tar.gz *
+cd ..
+rm -rf tmp/
